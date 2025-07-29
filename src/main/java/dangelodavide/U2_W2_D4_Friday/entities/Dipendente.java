@@ -1,5 +1,6 @@
 package dangelodavide.U2_W2_D4_Friday.entities;
 
+import dangelodavide.U2_W2_D4_Friday.Payloads.DipendentePayload;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -26,7 +27,6 @@ public class Dipendente {
     @NotBlank
     private String email;
 
-    @NotBlank
     private String password;
 
 
@@ -83,4 +83,16 @@ public class Dipendente {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public static Dipendente fromPayload(DipendentePayload payload) {
+        Dipendente dipendente = new Dipendente();
+        dipendente.setUsername(payload.username());
+        dipendente.setNome(payload.nome());
+        dipendente.setCognome(payload.cognome());
+        dipendente.setEmail(payload.email());
+        dipendente.setPassword(payload.password());
+        dipendente.setImmagineProfiloPath(payload.immagineProfiloPath());
+        return dipendente;
+    }
+
 }

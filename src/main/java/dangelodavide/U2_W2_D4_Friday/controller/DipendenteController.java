@@ -32,7 +32,9 @@ public class DipendenteController {
                         dipendente.getNome(),
                         dipendente.getCognome(),
                         dipendente.getEmail(),
-                        dipendente.getImmagineProfiloPath())).toList();
+                        dipendente.getImmagineProfiloPath(),
+                        null
+                )).toList();
     }//fine get all
 
     // --------------------------------------get id------------------------------------------
@@ -46,7 +48,9 @@ public class DipendenteController {
                 dipendente.getNome(),
                 dipendente.getCognome(),
                 dipendente.getEmail(),
-                dipendente.getImmagineProfiloPath());
+                dipendente.getImmagineProfiloPath(),
+                null
+                );
     }//fine get id
 
     // --------------------------------------create------------------------------------------
@@ -65,7 +69,8 @@ public class DipendenteController {
                 salvato.getNome(),
                 salvato.getCognome(),
                 salvato.getEmail(),
-                salvato.getImmagineProfiloPath()
+                salvato.getImmagineProfiloPath(),
+                null
         );
     }// end create
 
@@ -80,19 +85,8 @@ public class DipendenteController {
         dipendente.setEmail(payload.email());
         dipendente.setImmagineProfiloPath(payload.immagineProfiloPath());
         Dipendente updated = service.save(dipendente);
-        return new DipendentePayload(updated.getId(), updated.getUsername(), updated.getNome(), updated.getCognome(), updated.getEmail(), updated.getImmagineProfiloPath());
+        return new DipendentePayload(updated.getId(), updated.getUsername(), updated.getNome(), updated.getCognome(), updated.getEmail(), updated.getImmagineProfiloPath(), null);
     }//end update
-
-    //---------------------------------------------------------inserimento immagini--------------------------------
-
-    @PatchMapping("/{id}/avatar")
-    public String uploadImage(
-            @PathVariable UUID id,
-            @RequestParam("avatar") MultipartFile file
-    ) throws IOException {
-        return service.uploadAvatar(id, file);
-    }
-
 
     // --------------------------------------delete------------------------------------------
     @DeleteMapping("/{id}")

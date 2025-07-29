@@ -5,14 +5,9 @@ import dangelodavide.U2_W2_D4_Friday.exceptions.BadRequestException;
 import dangelodavide.U2_W2_D4_Friday.exceptions.ResourceNotFoundException;
 import dangelodavide.U2_W2_D4_Friday.repository.DipendenteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -28,15 +23,21 @@ public class DipendenteService {
         return repository.findAll();
     }
 
-    public Dipendente save(Dipendente dipendente) {
-        try {
-            return repository.save(dipendente);
-        } catch (DataIntegrityViolationException e) {
-            throw new BadRequestException("Violazione vincolo dati: probabilmente username o email già esistenti.");
-        } catch (Exception e) {
-            throw new BadRequestException("Errore durante il salvataggio del dipendente.");
-        }
+    public Dipendente save(Dipendente payload) {
+        repository.findByEmail(payload.getEmail()).ifPresent(d -> {
+            throw new BadRequestException("L'email " + d.getEmail() + " è già in uso!");
+        });
+
+        Dipendente dip = new Dipendente();
+        dip.setNome(payload.getNome());
+        dip.setCognome(payload.getCognome());
+        dip.setEmail(payload.getEmail());
+        dip.setUsername(payload.getUsername());
+        dip.setPassword(payload.getPassword());
+
+        return repository.save(dip);
     }
+
 
     public Dipendente findById(UUID id){
         return repository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Dipendente con ID " + id + " non trovato."));
